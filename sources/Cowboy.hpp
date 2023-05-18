@@ -11,10 +11,13 @@ namespace ariel {
 
         public:
         Cowboy(std::string name, Point loc);
+
         void shoot(Character* enemy);
         bool hasboolets() const;
         void reload();
+
         std::string getType() override;
+        std::string print() override;
     };
 }
 

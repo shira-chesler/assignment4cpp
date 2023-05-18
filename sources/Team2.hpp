@@ -2,30 +2,24 @@
 #define TEAM2_H
 
 #include <array>
-#include "Character.hpp"
+#include "Team.hpp"
+#include <iostream>
 
-constexpr int NUM_MEMBERS_OF_A_TEAM2 = 10;
+constexpr int INIT_PLACEMENT = 11;
 
 namespace ariel {
-    class Team2 {
+    class Team2 : public Team {
         private:
-        std::array<Character*, NUM_MEMBERS_OF_A_TEAM2> team;
-        bool started_game;
-        int alive_members=0;
-        int leader_position;
-        int last_assigned =0;
+        size_t last_assigned =INIT_PLACEMENT;
 
         public:
         Team2(Character* leader);
-        Team2(Team2 &tem);
-        Team2(Team2 &&tem) noexcept;
-        int stillAlive();
-        void add(Character* member);
-        void print();
-        Character* getLeader();
-        ~Team2();
-        Team2& operator=(const Team2& tem);
-        Team2& operator=(Team2&& tem) noexcept;
+    
+        void attack(Team *enemys) override;
+        void add(Character* member) override;
+        void print() override;
+
+        void check_change_leader() override;
     };
 }
 #endif 

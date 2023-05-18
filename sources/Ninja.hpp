@@ -12,10 +12,13 @@ namespace ariel {
         Ninja(std::string name, Point loc, int hit_p, int speed);
         Ninja(Ninja &nin);
         Ninja(Ninja&& nin) noexcept;
+        ~Ninja() override;
+
         void move(Character* enemy);
         void slash(Character* enemy);
+
         std::string getType() override=0;
-        ~Ninja() override;
+        std::string print() override;
 
         Ninja& operator=(const Ninja& nin);
         Ninja& operator=(Ninja&& nin) noexcept;

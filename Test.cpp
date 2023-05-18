@@ -184,7 +184,7 @@ TEST_SUITE("Checking exceptions throwing"){
     TEST_CASE("move towards got a negtive distance"){
         Point from(5,8);
         Point to(3,-4);
-        CHECK_THROWS(moveTowards(from, to, -9));
+        CHECK_THROWS(Point::moveTowards(from, to, -9));
     }
 
     TEST_SUITE("slashing/ shooting a dead character"){
@@ -461,7 +461,7 @@ TEST_CASE("Point moveTowards") {
     Point p2(3, 4);
     double distance = 2;
     Point expected_point(1.2, 1.6);
-    Point actual_point = moveTowards(p1, p2, distance);
+    Point actual_point = Point::moveTowards(p1, p2, distance);
     CHECK(expected_point == actual_point);
 }
 

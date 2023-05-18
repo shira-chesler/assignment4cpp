@@ -13,22 +13,38 @@ constexpr int NUM_MEMBERS_OF_A_TEAM = 10;
 namespace ariel {
     class Team {
         std::array<Character*, NUM_MEMBERS_OF_A_TEAM> team;
-        bool started_game;
+        bool started_game=false;
         int highest_cowboy_position=-1;
-        int lowest_ninja_position=NUM_MEMBERS_OF_A_TEAM;
-        int alive_members;
-        int leader_position;
+        size_t lowest_ninja_position=NUM_MEMBERS_OF_A_TEAM;
+        int alive_members=0;
+        size_t leader_position=0;
 
         public:
+        Team();
         Team(Character* leader);
         Team(Team &tem);
         Team(Team &&tem) noexcept;
-        int stillAlive();
-        void attack(Team *enemys);
-        void add(Character* member);
-        Character* getLeader();
-        std::string print();
         virtual ~Team();
+
+        int stillAlive();
+        virtual void attack(Team *enemys);
+        virtual void add(Character* member);
+        virtual void print();
+
+        virtual void check_change_leader();
+        Character* find_closest(Team* Character);
+        
+        void setStrtedGame(bool set_to);
+        void setTeamAt(Character *newmember, size_t at_i);
+        void setLeader(size_t nleaderpos);
+        Character* getLeader();
+        Character* getLeaderStraight();
+        Character* getTeamAt(size_t at_i);
+        bool getStartedGame();
+
+        void incAliveMembers();
+        void decAliveMembers();
+
         Team& operator=(const Team& tem);
         Team& operator=(Team&& tem) noexcept;
     };
