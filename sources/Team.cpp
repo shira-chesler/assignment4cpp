@@ -62,7 +62,7 @@ Team::Team(Team &&tem) noexcept{
 
 //destructor
 Team::~Team(){
-    for (size_t i = 0; i < highest_cowboy_position+1; i++)
+    for (size_t i = 0; i < 10; i++)
     {
         delete team.at(i);
     }

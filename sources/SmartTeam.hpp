@@ -29,7 +29,6 @@ namespace ariel {
         ~SmartTeam();
         SmartTeam& operator=(const SmartTeam& stem);
         SmartTeam& operator=(SmartTeam&& stem) noexcept;
-
     };
 }
 

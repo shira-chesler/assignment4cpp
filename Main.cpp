@@ -73,36 +73,8 @@ auto multi_attack = [](int n, Team &attacker, Team &defender) {
 };
 
 int main(){
-        Team team{random_char()};
-        Team team2{random_char()};
-        for (int i = 0; i < MAX_TEAM - 1; i++) {
-        team.add(random_char());
-        team2.add(random_char());
-        }
-
-        simulate_battle(team, team2);
-
-        if(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive()))) printf("a\n");
-
-        // Team team{random_char()};
-        // Team2 team2{random_char()};
-        // for (int i = 0; i < MAX_TEAM - 1; i++) {
-        // team.add(random_char());
-        // team2.add(random_char());
-        // }
-
-        // simulate_battle(team, team2);
-
-        // if(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive()))) printf("a\n");
-
-        // Team2 team{random_char()};
-        // Team2 team2{random_char()};
-        // for (int i = 0; i < MAX_TEAM - 1; i++) {
-        // team.add(random_char());
-        // team2.add(random_char());
-        // }
-
-        // simulate_battle(team, team2);
-
-        // if(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive()))) printf("a\n");
+        printf("cowboy: %lu\n", sizeof(create_cowboy()));
+        printf("yn: %lu\n", sizeof(create_yninja()));
+        printf("on: %lu\n", sizeof(create_oninja()));
+        printf("tn: %lu\n", sizeof(create_tninja()));
 }
