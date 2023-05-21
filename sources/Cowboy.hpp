@@ -18,6 +18,8 @@ namespace ariel {
 
         std::string getType() override;
         std::string print() override;
+
+        int getNumBullets() const;
     };
 }
 

@@ -42,3 +42,7 @@ std::string Cowboy::print(){
     }
     return "C    ("+this->getName()+")    --    "+this->getLocation().print();
 }
+
+int Cowboy::getNumBullets() const {
+    return num_bullets;
+}

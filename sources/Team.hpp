@@ -16,10 +16,9 @@ namespace ariel {
         bool started_game=false;
         int highest_cowboy_position=-1;
         size_t lowest_ninja_position=NUM_MEMBERS_OF_A_TEAM;
-        int alive_members=0;
         size_t leader_position=0;
 
-        public:
+    public:
         Team();
         Team(Character* leader);
         Team(Team &tem);
@@ -33,7 +32,7 @@ namespace ariel {
 
         virtual void check_change_leader();
         Character* find_closest(Team* Character);
-        
+
         void setStrtedGame(bool set_to);
         void setTeamAt(Character *newmember, size_t at_i);
         void setLeader(size_t nleaderpos);
@@ -42,12 +41,11 @@ namespace ariel {
         Character* getTeamAt(size_t at_i);
         bool getStartedGame();
 
-        void incAliveMembers();
-        void decAliveMembers();
-
         Team& operator=(const Team& tem);
         Team& operator=(Team&& tem) noexcept;
+
+        size_t actualSize() const;
     };
 }
 
-#endif 
+#endif
