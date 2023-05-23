@@ -7,36 +7,39 @@ const int trainedSpeed = 12;
 const int oldSpeed = 8;
 
 
-// This function calculates and returns a score for a given enemy.
-// The score is calculated based on several factors:
-// 1. The enemy's health - lower health enemies have a higher score.
-// 2. The type of the character making the attack - different types of characters (Cowboy or different types of Ninjas) adjust the score differently.
-// 3. The number of bullets left (if the character is a Cowboy) - the more bullets left, the higher the score.
-// 4. The proximity of other enemies - the more enemies are near the target enemy, the higher the score.
-double SmartTeam::enemyScore(Character *enemy, Team *enemyTeam, Character *attackingCharacter) {
-    double score = 0;
+// This function calculates and returns a count for a given enemy.
+// The count is calculated based on several factors:
+// 1. The enemy's health - lower health enemies have a higher count.
+// 2. The type of the character making the attack - different types of characters (Cowboy or different types of Ninjas) adjust the count differently.
+// 3. The number of bullets left (if the character is a Cowboy) - the more bullets left, the higher the count.
+// 4. The proximity of other enemies - the more enemies are near the target enemy, the higher the count.
+double SmartTeam::enemycount(Character *enemy, Team *enemyTeam, Character *attackingCharacter) {
+    double count = 0;
 
-    double healthScore = 1.0 / enemy->getHp();
-    score += healthScore * healthScore;
+    double healthcount = 1.0 / enemy->getHp();
+    count += healthcount * healthcount;
 
-    int speed = 0;
     if (attackingCharacter->getType() == "C") {
         auto *cowboy = dynamic_cast<Cowboy *>(attackingCharacter);
         if (cowboy->hasboolets()) {
-            score += 5 * cowboy->getNumBullets();
+            count += 5 * cowboy->getNumBullets();
         }
+        return count;
     } 
-    else if (attackingCharacter->getType() == "YN") {
+
+    // only ninjas are left
+    int speed = 0;
+    if (attackingCharacter->getType() == "YN") {
         speed = youngSpeed;
-        score += NinjaAttackScoreAdd(attackingCharacter, enemy);
+        count += NinjaAttackcountAdd(attackingCharacter, enemy);
     } 
     else if (attackingCharacter->getType() == "TN") {
         speed = trainedSpeed;
-        score += NinjaAttackScoreAdd(attackingCharacter, enemy);
+        count += NinjaAttackcountAdd(attackingCharacter, enemy);
     } 
     else { 
         speed = oldSpeed;
-        score += NinjaAttackScoreAdd(attackingCharacter, enemy);
+        count += NinjaAttackcountAdd(attackingCharacter, enemy);
     }
 
     int nearbyEnemies = 0;
@@ -49,12 +52,12 @@ double SmartTeam::enemyScore(Character *enemy, Team *enemyTeam, Character *attac
             }
         }
     }
-    score += nearbyEnemies;
-    return score;
+    count += nearbyEnemies;
+    return count;
 }
 
-//help function to check if to add to the score of the enemy
-int SmartTeam::NinjaAttackScoreAdd(Character *attackingCharacter, Character *enemy){
+//help function to check if to add to the count of the enemy
+int SmartTeam::NinjaAttackcountAdd(Character *attackingCharacter, Character *enemy){
     if (attackingCharacter->distance(enemy) <= 1) {
             return 40;
     }
@@ -65,8 +68,8 @@ int SmartTeam::NinjaAttackScoreAdd(Character *attackingCharacter, Character *ene
 // This function makes the SmartTeam attack the enemy team.
 // It does this by iterating over each character in the SmartTeam, and for each character:
 // 1. If the character is not alive, it skips the character.
-// 2. Otherwise, it calculates a score for each enemy in the enemy team.
-// 3. It targets the enemy with the highest score.
+// 2. Otherwise, it calculates a count for each enemy in the enemy team.
+// 3. It targets the enemy with the highest count.
 // 4. If the character is a Cowboy and has bullets, it makes the Cowboy shoot the targeted enemy.
 // 5. If the character is a Ninja, it checks the distance to the targeted enemy.
 // 6. If the distance is less than or equal to 1, it makes the Ninja slash the targeted enemy.
@@ -92,28 +95,28 @@ void SmartTeam::attack(Team *enemyTeam) {
         }
 
         //scoring the characters
-        std::array<double, 10> scores{0};
+        std::array<double, 10> counts{0};
         for (size_t i; i<10; i++){
             Character* enemy = enemyTeam->getTeamAt(i);
             if (enemy == nullptr || !enemy->isAlive()) {
                 continue;
             }
-            double score = this->enemyScore(enemy, enemyTeam, attackingCharacter);
-            scores.at(i) = score;
+            double count = this->enemycount(enemy, enemyTeam, attackingCharacter);
+            counts.at(i) = count;
         }
 
-        //choosing the best character according to the scores
+        //choosing the best character according to the counts
         Character *bestEnemy = nullptr;
-        double bestScore = -1;
+        double bestcount = -1;
         for (size_t i=0; i<10; i++){
-            double score = scores.at(i);
-            if (score > bestScore) {
-                bestScore = score;
+            double count = counts.at(i);
+            if (count > bestcount) {
+                bestcount = count;
                 bestEnemy = enemyTeam->getTeamAt(i);
             }
         }
 
-        // attcaking the enemy according to rules if not noll
+        // attcaking the enemy according to rules if not null
         if (bestEnemy != nullptr) {
             if (attackingCharacter->getType() == "C") {
                 dynamic_cast<Cowboy *>(attackingCharacter)->shoot(bestEnemy);
@@ -135,6 +138,7 @@ void SmartTeam::attack(Team *enemyTeam) {
     }
 }
 
+// smartTeam constructor
 SmartTeam::SmartTeam(Character *leader) : Team2(leader) {
 }
 

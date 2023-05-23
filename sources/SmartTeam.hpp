@@ -19,8 +19,8 @@ namespace ariel {
         void attack(Team *enemys) override;
 
     private:
-        static double enemyScore(Character *enemy, Team *enemyTeam, Character *attackingCharacter);
-        static int NinjaAttackScoreAdd(Character *attackingCharacter, Character *enemy);
+        static double enemycount(Character *enemy, Team *enemyTeam, Character *attackingCharacter);
+        static int NinjaAttackcountAdd(Character *attackingCharacter, Character *enemy);
 
     };
 }
