@@ -128,7 +128,12 @@ int main() {
     print_teams(team1, team2, smartTeam);
 
     fight(team1, smartTeam);
-    fight(team2, smartTeam);
+
+    Team team3(create_character<Cowboy>("Cowboy"));
+    Team2 team4(create_character<OldNinja>("OldNinja"));
+    SmartTeam smartTeam2(create_character<TrainedNinja>("TrainedNinja"));
+    fill_teams(team3, team4, smartTeam2);
+    fight(team4, smartTeam2);
 
     return 0;
 }
