@@ -208,7 +208,6 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
     }
 }
 
-
 TEST_SUITE("Battle related methods") {
 
     TEST_CASE("Cowboy shoot() and reload() methods") {

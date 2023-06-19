@@ -10,7 +10,7 @@
 
 using namespace ariel;
 
-TEST_SUITE("initializing charachters"){
+TEST_SUITE("initializing charachters and Team( add(),stillAlive() )"){
     TEST_CASE("intializing Cowboy correct"){
         Point woody_loc(25.3,87.6);
         Cowboy woody("Woody",woody_loc);
@@ -100,12 +100,79 @@ TEST_SUITE("initializing charachters"){
         CHECK(num_was_shot*10 == 100);
     }
 
-    TEST_CASE("slashing and shooting decreasing hp by correct number"){
+    TEST_CASE("Team initialization") {
+        Cowboy* cowboy = new Cowboy("cob", Point(1000,1000));
+        YoungNinja* ninja = new YoungNinja("nin", Point(54, 42));
+        OldNinja* old = new OldNinja("oldi", Point(67, 83));
+        Team team{cowboy};
+        CHECK_EQ(team.stillAlive(), 1);
 
+        Team2 team2{ninja};
+        CHECK_EQ(team2.stillAlive(), 1);
+
+        SmartTeam team3{old};
+        CHECK_EQ(team3.stillAlive(), 1);
+    }
+
+    TEST_CASE("Team class add() and stillAlive() methods") {
+        Cowboy* captain1 = new Cowboy("cob", Point(1000,1000));
+        YoungNinja* captain2 = new YoungNinja("nin", Point(54, 42));
+        OldNinja* captain3 = new OldNinja("oldi", Point(67, 83));
+
+        Team team1{captain1};
+        Team2 team2{captain2};
+        SmartTeam team3{captain3};
+
+        // Every addition should rise the value returned by stillAlive()
+        for (int i = 0; i < 9; i++) {
+            TrainedNinja* cur1 = new TrainedNinja("another one", Point(8,8));
+            Cowboy* cur2 = new Cowboy("another cby", Point(9,9));
+            YoungNinja* cur3 = new YoungNinja("another yn", Point(33,33));
+            team1.add(cur1);
+            team2.add(cur2);
+            team3.add(cur3);
+
+            CHECK_EQ(team1.stillAlive(), i + 2);
+            CHECK_EQ(team2.stillAlive(), i + 2);
+            CHECK_EQ(team3.stillAlive(), i + 2);
+        }
+
+        Cowboy* tmp = new Cowboy("getting inserted", Point(45, 67));
+        CHECK_THROWS(team1.add(tmp));
+        CHECK_THROWS(team2.add(tmp));
+        CHECK_THROWS(team3.add(tmp));
+        delete tmp;
     }
 }
 
 TEST_SUITE("Checking exceptions throwing"){
+    TEST_CASE("Sending nullptr to the attack() method") {
+        Cowboy* cowboy = new Cowboy("cob", Point(1000,1000));
+        TrainedNinja* ninja = new TrainedNinja("nin", Point(38,47));
+        Team team{cowboy};
+        Team2 team2{ninja};
+
+        CHECK_THROWS_AS(team.attack(nullptr), std::invalid_argument);
+        CHECK_THROWS_AS(team2.attack(nullptr), std::invalid_argument);
+    }
+
+    TEST_CASE("Sending negative value to hit()") {
+        Cowboy* cowboy = new Cowboy("cob", Point(1000,1000));
+        YoungNinja* yninja = new YoungNinja("ynin", Point(38,47));
+        TrainedNinja* tninja = new TrainedNinja("tnin", Point(38,47));
+        OldNinja* oninja = new OldNinja("onin", Point(38,47));
+
+        CHECK_THROWS_AS(cowboy->hit(-37), std::invalid_argument);
+        CHECK_THROWS_AS(yninja->hit(-42), std::invalid_argument);
+        CHECK_THROWS_AS(oninja->hit(-58), std::invalid_argument);
+        CHECK_THROWS_AS(tninja->hit(-3000), std::invalid_argument);
+
+        delete cowboy;
+        delete yninja;
+        delete oninja;
+        delete tninja;
+    }
+
     TEST_CASE("reload and shooting by a dead cowboy"){
         Point woody_loc(0,0);
         Cowboy woody("Woody",woody_loc);
@@ -160,8 +227,6 @@ TEST_SUITE("Checking exceptions throwing"){
         CHECK_THROWS(Naruto.move(&enemy));
         CHECK_THROWS(Naruto.slash(&enemy));
     }
-
-    //TEST_CASE("trying to hit character with a negative number"){
 
     TEST_CASE("self harm"){
         Cowboy Woody("Woody", Point(0,0.5));
@@ -393,6 +458,7 @@ TEST_SUITE("Checking exceptions throwing"){
         }
     }
 }
+
 TEST_SUITE("operations on teams correctly"){
     TEST_CASE("Team operations"){
         Cowboy* Woody = new Cowboy("Woody", Point(0, 0.8));
@@ -444,6 +510,70 @@ TEST_SUITE("operations on teams correctly"){
         }
         CHECK_EQ(tem.stillAlive(),2);
         CHECK(ldr != tem.getLeader());
+    }
+}
+
+TEST_SUITE("operations in battles"){
+    TEST_CASE("Cowboy shoot() and reload() methods") {
+        Cowboy* cowboy = new Cowboy("cob", Point(1000,1000));
+        OldNinja* target = new OldNinja("trgt", Point(8,7));
+
+        auto shoot = [&](int times) {
+            for (int i = 0; i < times; i++) {
+                cowboy->shoot(target);
+            }
+        };
+
+        shoot(6);
+        CHECK_FALSE(cowboy->hasboolets());
+        CHECK_NOTHROW(cowboy->shoot(target)); // This should not damage the target
+        cowboy->reload();
+
+        shoot(2);
+        cowboy->reload();
+        shoot(6);
+        CHECK(target->isAlive()); // Target should still be alive with 10 hit points if the cowboys damage is 10
+        shoot(1);
+        CHECK(target->isAlive()); // Reloading when the magazine isn't empty shouldn't result in more than 6 bullets, the previous shoot should have no effect
+        cowboy->reload();
+        shoot(1);
+        CHECK_FALSE(target->isAlive()); // Target should be dead
+        delete cowboy;
+        delete target;
+    }
+
+    TEST_CASE("Ninjas can only slash when distance is less than 1") {
+        OldNinja old{"Bob", Point{0, 0}};
+        TrainedNinja trained{"Kung fu panda", Point{0, 0}};
+        YoungNinja young{"Karate kid", Point{0.5, 0.5}};
+        Cowboy cowboy{"Clint", Point{0.5, 0.5}};
+
+        for (int i = 0; i < 1; i++) {
+            old.slash(&cowboy);
+            young.slash(&cowboy);
+        }
+
+        CHECK(cowboy.isAlive());
+
+        old.slash(&cowboy);
+        CHECK_FALSE(cowboy.isAlive());
+
+        YoungNinja ninja{"Bob", Point{-0.5, 0.5}}; // Distance from young is exactly one
+        OldNinja ninja2{"Bob", Point{2, 2}};
+
+        // These attacks should have no affect
+        for (int i = 0; i < 20; i++) {
+            trained.slash(&ninja2);
+            old.slash(&ninja2);
+            young.slash(&ninja2);
+        }
+
+        for(int i = 0 ; i < 1 ; i++){
+            old.slash(&ninja);
+            young.slash(&ninja);
+        }
+        CHECK(ninja.isAlive());
+        CHECK(ninja2.isAlive());
     }
 }
 
