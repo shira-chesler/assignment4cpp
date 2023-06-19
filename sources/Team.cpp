@@ -95,6 +95,7 @@ void Team::attack(Team *enemys) {
         setStrtedGame(true);
         enemys->setStrtedGame(true);
     }
+    
     Character *victim = find_closest(enemys);
     for (size_t i = 0; i < highest_cowboy_position + 1; i++) {
         if (team.at(i)->isAlive() && enemys->stillAlive() > 0) {

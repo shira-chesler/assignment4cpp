@@ -29,10 +29,10 @@ T* create_character(Args... args) {
 
 void fight(Team& team1, SmartTeam& smartTeam) {
     while (team1.stillAlive() > 0 && smartTeam.stillAlive() > 0) {
-        team1.attack(&smartTeam);
         smartTeam.attack(&team1);
+        team1.attack(&smartTeam);
     }
-    if (team1.stillAlive() > 0) {
+    if (smartTeam.stillAlive() > 0) {
         cout << "\nWinner is team1" << endl;
     } else {
         cout << "\nWinner is smartTeam" << endl;
@@ -129,11 +129,11 @@ int main() {
 
     fight(team1, smartTeam);
 
-    Team team3(create_character<Cowboy>("Cowboy"));
-    Team2 team4(create_character<OldNinja>("OldNinja"));
+    Team team5(create_character<Cowboy>("Cowboy"));
+    Team2 team6(create_character<OldNinja>("OldNinja"));
     SmartTeam smartTeam2(create_character<TrainedNinja>("TrainedNinja"));
-    fill_teams(team3, team4, smartTeam2);
-    fight(team4, smartTeam2);
+    fill_teams(team5, team6, smartTeam2);
+    fight(team6, smartTeam2);
 
     return 0;
 }
